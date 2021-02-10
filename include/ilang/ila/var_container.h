@@ -206,6 +206,9 @@ public:
   /// constructed from the ith elements of the vectors of s.
   virtual VarContainerPtr zip();
 
+  // [TODO]
+  // static VarContainerPtr zip(std::vector<std::pair<std::string, std::VarContainer>> members);
+
   /// If this container is a vector of structs, v, produces 
   /// a struct of vectors, s, where the ith element of the v 
   /// is unpacked into the the ith elements of the vectors of s.

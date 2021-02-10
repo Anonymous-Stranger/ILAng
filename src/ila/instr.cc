@@ -9,7 +9,7 @@
 namespace ilang {
 
 Instr::Instr(const std::string& name, const InstrLvlAbsPtr& host)
-    : Object(name), host_(host) {
+    : IlaInstructionLike(name, host) {
   // initialization for other components
   updates_.clear();
 }
@@ -20,15 +20,15 @@ InstrPtr Instr::New(const std::string& name, InstrLvlAbsPtr host) {
   return std::make_shared<Instr>(name, host);
 }
 
-void Instr::set_decode(const ExprPtr& decode) {
-  ILA_ERROR_IF(decode_)
-      << "Decode for " << name()
-      << "has been assigned. Use ForceSetDecode to overwrite.";
+// void Instr::set_decode(const ExprPtr& decode) {
+//   ILA_ERROR_IF(decode_)
+//       << "Decode for " << name()
+//       << "has been assigned. Use ForceSetDecode to overwrite.";
 
-  if (!decode_) {
-    ForceSetDecode(decode);
-  }
-}
+//   if (!decode_) {
+//     ForceSetDecode(decode);
+//   }
+// }
 
 void Instr::set_update(const std::string& name, const ExprPtr& update) {
   auto pos = updates_.find(name);
@@ -75,12 +75,26 @@ Instr::StateNameSet Instr::updated_states() const {
   return ret_;
 }
 
-void Instr::ForceSetDecode(const ExprPtr& decode) {
-  ILA_NOT_NULL(decode); // setting NULL pointer to decode function
-  ILA_CHECK(decode->is_bool()) << "Decode must have Boolean sort.";
-
-  decode_ = Unify(decode);
+Instr::StateNameSet Instr::used_states() const {
+  StateNameSet ret_;
+  for (const auto& [state, expr] : updates_) {
+    ret_.insert(state);
+    auto f = [&ret_](const ExprPtr& e){
+      if (e->is_var()) ret_.insert(e->name().str());
+    };
+    expr->DepthFirstVisit(f);
+  }
+  return ret_;
 }
+
+// void Instr::ForceSetDecode(const ExprPtr& decode) {
+//   ILA_NOT_NULL(decode); // setting NULL pointer to decode function
+//   ILA_CHECK(decode->is_bool()) << "Decode must have Boolean sort.";
+
+//   decode_ = Unify(decode);
+// }
+
+void Instr::Compile() { if (host()) host()->AddInstr(InstrPtr{this}); }
 
 void Instr::ForceAddUpdate(const std::string& name, const ExprPtr& update) {
   ExprPtr sim_update = Unify(update);
@@ -100,6 +114,6 @@ std::ostream& operator<<(std::ostream& out, InstrCnstPtr i) {
   return i->Print(out);
 }
 
-ExprPtr Instr::Unify(const ExprPtr& e) { return host_ ? host_->Unify(e) : e; }
+// ExprPtr Instr::Unify(const ExprPtr& e) { return host_ ? host_->Unify(e) : e; }
 
 } // namespace ilang

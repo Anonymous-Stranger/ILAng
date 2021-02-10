@@ -54,7 +54,7 @@ private:
 
 public:
   // ------------------------- CONSTRUCTOR/DESTRUCTOR ----------------------- //
-  /// Consturctor.
+  /// Constructor.
   InstrLvlAbs(const std::string& name = "",
               const InstrLvlAbsPtr& parent = nullptr);
   /// Default destructor.
@@ -305,7 +305,7 @@ public:
   /// Overload output stream for pointer
   friend std::ostream& operator<<(std::ostream& out, InstrLvlAbsCnstPtr ila);
 
-  friend class Instr;
+  friend class IlaInstructionLike;
 
   /// \brief Templated visitor: visit each child-ILA in a depth-first order.
   template <class F> void DepthFirstVisit(F& func) const {

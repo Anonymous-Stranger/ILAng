@@ -13,6 +13,7 @@ target_sources(${ILANG_LIB_NAME} PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/hash_ast.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/instr.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/instr_lvl_abs.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/instrlike/ilainstructionlike.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/object.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/symbol.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/transition.cc
